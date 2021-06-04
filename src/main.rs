@@ -31,7 +31,7 @@ fn main() -> amethyst::Result<()> {
                 )
                 .with_plugin(RenderFlat2D::default()),
         )?
-        .with_bundle(TransformBundle::new())?;  // bundle for tracking entities positions
+        .with_bundle(TransformBundle::new())?; // bundle for tracking entities positions
 
     // game application
     let mut game = Application::new(assets_dir, pong::Pong, game_data)?;

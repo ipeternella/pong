@@ -18,9 +18,12 @@ pub struct Pong;
 impl SimpleState for Pong {
     fn on_start(&mut self, _data: StateData<'_, GameData<'_, '_>>) {
         let world = _data.world;
+        let sprite_sheet_handle = load_sprite_sheet(world);
+
+        world.register::<Paddle>(); // in order to use Paddle Component on an entity
 
         initialize_camera(world);
-        initialize_paddles(world);
+        initialize_paddles(world, sprite_sheet_handle);
     }
 }
 
@@ -71,19 +74,24 @@ fn initialize_camera(world: &mut World) {
 
 /// Creates the left and right paddles at their starting position and attaches them
 /// to the World object.
-fn initialize_paddles(world: &mut World) {
+fn initialize_paddles(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let mut left_paddle_transform = Transform::default();
     let mut right_paddle_transform = Transform::default();
     let starting_y = ARENA_HEIGHT / 2.0;
 
+    // SpriteRender is a component that is a 'slice' of a spritesheet
+    let paddle_left = SpriteRender::new(sprite_sheet_handle, 0); // paddle is the first sprite
+    let paddle_right = paddle_left.clone();
+
     // coordinate transforms to position the paddles
-    left_paddle_transform.set_translation_xyz(0.0, starting_y, 0.0);
-    right_paddle_transform.set_translation_xyz(ARENA_WIDTH, starting_y, 0.0);
+    left_paddle_transform.set_translation_xyz(PADDLE_WIDTH * 0.5, starting_y, 0.0);
+    right_paddle_transform.set_translation_xyz(ARENA_WIDTH - PADDLE_WIDTH * 0.5, starting_y, 0.0);
 
     // left paddle creation
     world
         .create_entity()
         .with(Paddle::new(Side::Left))
+        .with(paddle_left)
         .with(left_paddle_transform)
         .build();
 
@@ -91,8 +99,38 @@ fn initialize_paddles(world: &mut World) {
     world
         .create_entity()
         .with(Paddle::new(Side::Right))
+        .with(paddle_right) // sprite renderer
         .with(right_paddle_transform)
         .build();
+}
 
-    world.register::<Paddle>(); // in order to use Paddle Component on an entity
+/// Reads a spritesheet png file and its related ron file in order to parse the spritesheet
+/// at the appropriate positions in order to generate a handle to a well-formatted SpriteSheet
+/// struct which contains the sprites at the right sizes/positions.
+fn load_sprite_sheet(world: &mut World) -> Handle<SpriteSheet> {
+    // the handle points to the location where the asset was loaded: faster and reduces mem usage!
+    let texture_handle = {
+        // loader is not ECS: it's a resource that belongs to the ECS World
+        let loader = world.read_resource::<Loader>(); // added by the core application
+
+        // texture storage is not ECS: it's a resource where the loader puts Textures loaded from spritesheet, etc.
+        let texture_storage = world.read_resource::<AssetStorage<Texture>>();
+
+        loader.load(
+            "textures/spritesheet.png",
+            ImageFormat::default(),
+            (),
+            &texture_storage,
+        )
+    };
+
+    let loader = world.read_resource::<Loader>();
+    let sprite_sheet_store = world.read_resource::<AssetStorage<SpriteSheet>>();
+
+    loader.load(
+        "textures/spritesheet.ron",        // ron file: sprites' positions
+        SpriteSheetFormat(texture_handle), // handle to the loaded spritesheet png file
+        (),
+        &sprite_sheet_store, // storage used to store spritesheet data (extract pics from the png file)
+    )
 }
