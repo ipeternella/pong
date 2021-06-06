@@ -34,8 +34,10 @@ impl<'s> System<'s> for PaddleSystem {
         Read<'s, InputHandler<StringBindings>>,
     );
 
-    fn run(&mut self, (mut transforms, paddles, input): Self::SystemData) {
-        for (paddle, transform) in (&paddles, &mut transforms).join() {
+    fn run(&mut self, data: Self::SystemData) {
+        let (mut transform_storage, paddle_storage, input) = data;
+
+        for (paddle, transform) in (&paddle_storage, &mut transform_storage).join() {
             // axis_value returns the axis input value or None
             let captured_input = match paddle.side {
                 Side::Left => input.axis_value("left_paddle"),
