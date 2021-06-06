@@ -13,7 +13,7 @@ The classic pong game written in Rust! This project is still a WIP.
 
 ### Pong
 
-[Pong](https://en.wikipedia.org/wiki/Pong) is a classic tennis-based arcade game which was designed by Atari in 1972. This project was created for educational purposes and is a short and humble remake of the game using Rust and Amethyst as the game engine according to its [pong](https://book.amethyst.rs/book/stable/pong-tutorial/pong-tutorial-04) chapter.
+[Pong](https://en.wikipedia.org/wiki/Pong) is a classic tennis-based arcade game which was designed by Atari in 1972. This project was created for educational purposes and is a short and humble remake of the game using Rust and Amethyst as the game engine and by following the pong chapter in [Amethyst's book](https://book.amethyst.rs/book/stable/intro).
 
 To sum up: a project to study `Rust` and some of its gaming capabilities ;)
 
