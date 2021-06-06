@@ -97,7 +97,7 @@ fn initialize_paddles(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet
     // left paddle creation
     world
         .create_entity()
-        .with(Paddle::new(Side::Left))
+        .with(Paddle::new(Side::Left)) // component used in ReadStorage
         .with(paddle_left)
         .with(left_paddle_transform)
         .build();
