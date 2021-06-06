@@ -27,12 +27,13 @@ impl SimpleState for Pong {
     }
 }
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum Side {
     Left,
     Right,
 }
 
+#[derive(Debug)]
 pub struct Paddle {
     pub side: Side,
     pub width: f32,
