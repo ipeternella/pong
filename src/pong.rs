@@ -7,6 +7,8 @@ use amethyst::{
     renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
 };
 
+use crate::components::{initialize_ball, Ball};
+
 pub const ARENA_WIDTH: f32 = 100.0;
 pub const ARENA_HEIGHT: f32 = 100.0;
 
@@ -21,8 +23,11 @@ impl SimpleState for Pong {
         let sprite_sheet_handle = load_sprite_sheet(world);
 
         world.register::<Paddle>(); // in order to use Paddle Component on an entity
+        world.register::<Ball>(); // in order to use the Ball Component on an entity
 
+        // entities and their componenets initialization
         initialize_camera(world);
+        initialize_ball(world, sprite_sheet_handle.clone()); // handler is consumed per entitty
         initialize_paddles(world, sprite_sheet_handle);
     }
 }
@@ -63,6 +68,7 @@ impl Component for Paddle {
 fn initialize_camera(world: &mut World) {
     let mut transform = Transform::default();
 
+    // (x, y, z = 1.0)
     transform.set_translation_xyz(ARENA_WIDTH * 0.5, ARENA_HEIGHT * 0.5, 1.0);
 
     // world stores all runtime data: entites and components from ECS

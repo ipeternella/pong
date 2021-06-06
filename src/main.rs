@@ -10,6 +10,7 @@ use amethyst::{
     utils::application_root_dir,
 };
 
+mod components;
 mod pong;
 mod systems;
 
@@ -42,7 +43,7 @@ fn main() -> amethyst::Result<()> {
         .with_bundle(input_bundle)? // bundle for reading inputs
         .with(systems::PaddleSystem, "paddle_system", &["input_system"]); // system (not bundle) -> input sys must run b4!
 
-    // game application
+    // game application -> pong::Pong contains the state and game hooks (on_start, etc.)
     let mut game = Application::new(assets_dir, pong::Pong, game_data)?;
 
     game.run();
