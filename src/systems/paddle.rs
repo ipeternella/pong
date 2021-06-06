@@ -17,22 +17,19 @@ impl<'s> System<'s> for PaddleSystem {
     );
 
     fn run(&mut self, (mut transforms, paddles, input): Self::SystemData) {
-        for (paddle, _) in (&paddles, &mut transforms).join() {
+        for (paddle, transform) in (&paddles, &mut transforms).join() {
             // capture movement according to the paddle size
             let movement = match paddle.side {
                 Side::Left => input.axis_value("left_paddle"),
-                Side::Right => input.axis_value("right_value"),
+                Side::Right => input.axis_value("right_paddle"),
             };
 
             // movement is an option: Some(x) or None
             if let Some(mv_amount) = movement {
                 if mv_amount != 0.0 {
-                    let side_name = match paddle.side {
-                        Side::Left => "Left",
-                        Side::Right => "Right",
-                    };
+                    let scaled_mv_amount = 1.2 * mv_amount;
 
-                    println!("{:?} paddle is moving {}", side_name, mv_amount);
+                    transform.prepend_translation_y(scaled_mv_amount);
                 }
             }
         }
