@@ -36,7 +36,14 @@ impl<'s> System<'s> for CollisionSystem {
                 let paddle_x = transform.translation().x;
                 let paddle_y = transform.translation().y;
 
-                if has_paddle_collision(ball_x, ball_y, paddle_x, paddle_y, paddle.width) {
+                if has_paddle_collision(
+                    ball_x,
+                    ball_y,
+                    paddle_x,
+                    paddle_y,
+                    paddle.width,
+                    paddle.height,
+                ) {
                     if (paddle.side == Side::Left && ball.velocity[0] < 0.0)
                         || (paddle.side == Side::Right && ball.velocity[0] > 0.0)
                     {
@@ -59,16 +66,14 @@ fn has_paddle_collision(
     paddle_x: f32,
     paddle_y: f32,
     paddle_width: f32,
+    paddle_height: f32,
 ) -> bool {
-    let paddle_top = paddle_y + paddle_width / 2.0;
-    let paddle_bottom = paddle_y - paddle_width / 2.0;
+    let paddle_top = paddle_y + paddle_height / 2.0;
+    let paddle_bottom = paddle_y - paddle_height / 2.0;
+
     let paddle_right = paddle_x + paddle_width / 2.0;
     let paddle_left = paddle_x - paddle_width / 2.0;
 
-    let coll = (ball_x > paddle_left && ball_x < paddle_right)
-        && (ball_y > paddle_bottom && ball_y < paddle_top);
-
-    println!("Has collision: {:?}", coll);
-
-    coll
+    (ball_x > paddle_left && ball_x < paddle_right)
+        && (ball_y > paddle_bottom && ball_y < paddle_top)
 }
