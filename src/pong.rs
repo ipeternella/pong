@@ -9,7 +9,6 @@ pub const ARENA_WIDTH: f32 = 100.0;
 pub const ARENA_HEIGHT: f32 = 100.0;
 
 /// Represents the Pong game state.
-
 #[derive(Default)]
 pub struct Pong {
     ball_spawn_timer: Option<f32>,

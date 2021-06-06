@@ -30,7 +30,7 @@ fn main() -> amethyst::Result<()> {
     let input_bundle =
         InputBundle::<StringBindings>::new().with_bindings_from_file(key_bindings_path)?;
 
-    // repo with game logic
+    // data builder contains all the ECS bundles and systems used to configure the game
     let game_data = GameDataBuilder::default()
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
@@ -50,10 +50,12 @@ fn main() -> amethyst::Result<()> {
             &["paddle_system", "ball_system"],
         );
 
-    // game application -> pong::Pong contains the state and game hooks (on_start, etc.)
+    // builds the game application -> pong::Pong contains the state and game hooks (on_start, etc.)
     let mut game = Application::new(assets_dir, pong::Pong::default(), game_data)?;
 
+    // main game loop
     game.run();
 
+    // final status code
     Ok(())
 }
