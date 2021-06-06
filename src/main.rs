@@ -43,7 +43,12 @@ fn main() -> amethyst::Result<()> {
         .with_bundle(TransformBundle::new())? // bundle for tracking entities positions
         .with_bundle(input_bundle)? // bundle for reading inputs
         .with(systems::PaddleSystem, "paddle_system", &["input_system"]) // system (not bundle) -> input sys must run b4!
-        .with(systems::BallSystem, "ball_system", &[]);
+        .with(systems::BallSystem, "ball_system", &[])
+        .with(
+            systems::CollisionSystem,
+            "collision_system",
+            &["paddle_system", "ball_system"],
+        );
 
     // game application -> pong::Pong contains the state and game hooks (on_start, etc.)
     let mut game = Application::new(assets_dir, pong::Pong, game_data)?;

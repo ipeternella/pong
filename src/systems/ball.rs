@@ -27,7 +27,7 @@ impl<'s> System<'s> for BallSystem {
             // game_velocity (m/s) * delta_time (s/frame) = velocity_per_frame m/frame
             // velocity_per_frame (m/frame) * fps (frame/s) = m/s -> game velocity is independent from the framerate
             transform.prepend_translation_x(ball.velocity[0] * time.delta_seconds());
-            transform.prepend_translation_x(ball.velocity[1] * time.delta_seconds());
+            transform.prepend_translation_y(ball.velocity[1] * time.delta_seconds());
         }
     }
 }
