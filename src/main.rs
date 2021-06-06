@@ -51,7 +51,7 @@ fn main() -> amethyst::Result<()> {
         );
 
     // game application -> pong::Pong contains the state and game hooks (on_start, etc.)
-    let mut game = Application::new(assets_dir, pong::Pong, game_data)?;
+    let mut game = Application::new(assets_dir, pong::Pong::default(), game_data)?;
 
     game.run();
 
