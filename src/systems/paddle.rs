@@ -5,7 +5,10 @@ use amethyst::{
     input::{InputHandler, StringBindings},
 };
 
-use crate::pong::{Paddle, Side, ARENA_HEIGHT, PADDLE_HEIGHT};
+use crate::{
+    entities::{Paddle, Side, PADDLE_HEIGHT},
+    pong::ARENA_HEIGHT,
+};
 
 #[derive(SystemDesc)]
 pub struct PaddleSystem;

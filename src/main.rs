@@ -1,5 +1,6 @@
-mod components;
+mod entities;
 mod pong;
+mod sprite_sheet;
 mod systems;
 
 use amethyst::{
