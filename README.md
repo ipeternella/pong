@@ -8,8 +8,8 @@ The classic pong game written in Rust! This project is still a WIP.
 
 - [Pong](#pong)
 - [Used Technologies](#used-technologies)
-- [Running locally](#running-locally)
-- [Testing](#testing)
+- [Running the project](#running-the-project)
+- [Running tests](#running-tests)
 
 ### Pong
 
@@ -26,7 +26,7 @@ The main technologies used (so far):
 
 [Amethyst(https://amethyst.rs/) is an ECS (Entity Component System) based game engine which was used to power the game logic, state and graphics. Amethyst uses [Metal](https://developer.apple.com/metal/) as the main API for using MacOS's GPU.
 
-### Running Locally
+### Running The Project
 
 To hit the ground quickly, use [Cargo](https://doc.rust-lang.org/cargo/):
 
@@ -38,8 +38,8 @@ This will compile the game in development mode and run it which should render th
 
 ### Running Tests
 
-Use cargo, but the tests are still WIP!
+In order to run the unit tests, use cargo:
 
 ```sh
-cargo test  # WIP!
+cargo test
 ```
