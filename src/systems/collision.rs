@@ -74,6 +74,90 @@ fn has_paddle_collision(
     let paddle_right = paddle_x + paddle_width / 2.0;
     let paddle_left = paddle_x - paddle_width / 2.0;
 
-    (ball_x > paddle_left && ball_x < paddle_right)
-        && (ball_y > paddle_bottom && ball_y < paddle_top)
+    (ball_x >= paddle_left && ball_x <= paddle_right)
+        && (ball_y >= paddle_bottom && ball_y <= paddle_top)
+}
+
+// built-in rust attribute: compiled only when in "test" mode!
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_assert_paddle_collision() {
+        // arrange - ball within the paddle ranges
+        let paddle_width = 4.0;
+        let paddle_height = 10.0;
+
+        let ball_x = 18.0;
+        let ball_y = 25.0;
+
+        let paddle_x = 20.0; //  18 <= paddle_range_x <= 22
+        let paddle_y = 20.0; //  15 <= paddle_range_y <= 25
+
+        // act
+        let has_collision = has_paddle_collision(
+            ball_x,
+            ball_y,
+            paddle_x,
+            paddle_y,
+            paddle_width,
+            paddle_height,
+        );
+
+        // assert
+        assert_eq!(true, has_collision);
+    }
+
+    #[test]
+    fn should_assert_paddle_collision_on_edge() {
+        // arrange - ball within the paddle ranges
+        let paddle_width = 4.0;
+        let paddle_height = 10.0;
+
+        let ball_x = 22.0;
+        let ball_y = 25.0;
+
+        let paddle_x = 20.0; //  18 <= paddle_range_x <= 22
+        let paddle_y = 20.0; //  15 <= paddle_range_y <= 25
+
+        // act
+        let has_collision = has_paddle_collision(
+            ball_x,
+            ball_y,
+            paddle_x,
+            paddle_y,
+            paddle_width,
+            paddle_height,
+        );
+
+        // assert
+        assert_eq!(true, has_collision);
+    }
+
+    #[test]
+    fn should_assert_no_paddle_collision() {
+        // arrange - ball outside the paddle ranges
+        let paddle_width = 4.0;
+        let paddle_height = 10.0;
+
+        let ball_x = 2.0;
+        let ball_y = 2.0;
+
+        let paddle_x = 20.0; //  18 <= paddle_range_x <= 22
+        let paddle_y = 20.0; //  15 <= paddle_range_y <= 25
+
+        // act
+        let has_collision = has_paddle_collision(
+            ball_x,
+            ball_y,
+            paddle_x,
+            paddle_y,
+            paddle_width,
+            paddle_height,
+        );
+
+        // assert
+        assert_eq!(false, has_collision);
+    }
 }
