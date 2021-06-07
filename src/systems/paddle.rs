@@ -53,3 +53,62 @@ impl<'s> System<'s> for PaddleSystem {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_update_paddle_movement_with_bottom_clamping() {
+        // arrange
+        let paddle_system = PaddleSystem {};
+        let mut paddle_transform = Transform::default();
+        let paddle_y = 5.0;
+        let mv_amount = 2.0;
+        let expected_y = 8.0; // 5.0 + 1.2 * 2.0 = 7.4, which is less than MIN == 8.0 => so, bottom clamped!
+
+        paddle_transform.set_translation_xyz(1.0, paddle_y, 0.0);
+
+        // act
+        paddle_system.update_position(&mut paddle_transform, mv_amount);
+
+        // assert
+        assert_eq!(expected_y, paddle_transform.translation().y);
+    }
+
+    #[test]
+    fn should_update_paddle_movement_with_top_clamping() {
+        // arrange
+        let paddle_system = PaddleSystem {};
+        let mut paddle_transform = Transform::default();
+        let paddle_y = 94.0;
+        let mv_amount = 2.0;
+        let expected_y = 92.0; // 94.0 + 1.2 * 2.0 = 96.4, which is more than MAX == 92.0 => so, top clamped!
+
+        paddle_transform.set_translation_xyz(1.0, paddle_y, 0.0);
+
+        // act
+        paddle_system.update_position(&mut paddle_transform, mv_amount);
+
+        // assert
+        assert_eq!(expected_y, paddle_transform.translation().y);
+    }
+
+    #[test]
+    fn should_update_paddle_movement_without_clamping() {
+        // arrange
+        let paddle_system = PaddleSystem {};
+        let mut paddle_transform = Transform::default();
+        let paddle_y = 40.0;
+        let mv_amount = 2.0;
+        let expected_y = 42.4; // 40.0 + 1.2 * 2.0 = 42.4 => 8.0 < 42.4 < 92.0 : no clamping!
+
+        paddle_transform.set_translation_xyz(1.0, paddle_y, 0.0);
+
+        // act
+        paddle_system.update_position(&mut paddle_transform, mv_amount);
+
+        // assert
+        assert_eq!(expected_y, paddle_transform.translation().y);
+    }
+}
