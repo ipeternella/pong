@@ -35,6 +35,7 @@ pub fn build_game_config(
         .with_bundle(input_bundle)? // bundle for reading inputs
         .with(systems::PaddleSystem, "paddle_system", &["input_system"])
         .with(systems::BallSystem, "ball_system", &[])
+        .with(systems::ScoreSystem, "score_system", &["ball_system"])
         .with(
             systems::CollisionSystem,
             "collision_system",
