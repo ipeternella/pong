@@ -6,8 +6,8 @@ use amethyst::{
 };
 
 use crate::{
-    entities::{Paddle, Side, PADDLE_HEIGHT},
-    pong::ARENA_HEIGHT,
+    entities::{Paddle, Side},
+    settings::{ARENA_HEIGHT, PADDLE_HEIGHT},
 };
 
 #[derive(SystemDesc)]

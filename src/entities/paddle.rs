@@ -7,10 +7,7 @@ use amethyst::{
     shred::World,
 };
 
-pub const PADDLE_WIDTH: f32 = 4.0;
-pub const PADDLE_HEIGHT: f32 = 16.0;
-
-use crate::pong::{ARENA_HEIGHT, ARENA_WIDTH};
+use crate::settings::{ARENA_HEIGHT, ARENA_WIDTH, PADDLE_HEIGHT, PADDLE_WIDTH};
 
 /// Enum used to identify the left/right paddles.
 #[derive(PartialEq, Eq, Debug)]

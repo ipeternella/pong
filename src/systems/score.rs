@@ -7,7 +7,7 @@ use amethyst::{
 
 use crate::{
     entities::Ball,
-    pong::{ARENA_HEIGHT, ARENA_WIDTH},
+    settings::{ARENA_HEIGHT, ARENA_WIDTH},
 };
 
 #[derive(SystemDesc)]

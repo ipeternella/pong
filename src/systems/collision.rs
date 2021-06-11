@@ -6,7 +6,7 @@ use amethyst::{
 
 use crate::{
     entities::{Ball, Paddle, Side},
-    pong::ARENA_HEIGHT,
+    settings::ARENA_HEIGHT,
 };
 
 pub struct CollisionSystem;

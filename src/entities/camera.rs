@@ -5,7 +5,7 @@ use amethyst::{
     shred::World,
 };
 
-use crate::pong::{ARENA_HEIGHT, ARENA_WIDTH};
+use crate::settings::{ARENA_HEIGHT, ARENA_WIDTH};
 
 /// Initializes a camera object at the middle of the (X, Y) axis and in front of the
 /// (X, Y) axis at Z = 1 distance.

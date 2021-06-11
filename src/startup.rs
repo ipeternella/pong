@@ -4,7 +4,9 @@ use amethyst::{
     core::TransformBundle,
     input::{InputBundle, StringBindings},
     renderer::{types::DefaultBackend, RenderFlat2D, RenderToWindow, RenderingBundle},
-    start_logger, GameDataBuilder,
+    start_logger,
+    ui::{RenderUi, UiBundle},
+    GameDataBuilder,
 };
 
 use crate::systems;
@@ -14,8 +16,11 @@ pub fn build_game_config(
     app_root: &PathBuf,
 ) -> amethyst::Result<GameDataBuilder<'static, 'static>> {
     // paths based on app root path
-    let display_config_path = app_root.join("config").join("display.ron");
-    let key_bindings_path = app_root.join("config").join("key_bindings.ron");
+    let display_config_path = app_root.join("src").join("settings").join("display.ron");
+    let key_bindings_path = app_root
+        .join("src")
+        .join("settings")
+        .join("key_bindings.ron");
 
     // input handler: parameter type determines how the axes/actions are read
     let input_bundle =
@@ -29,10 +34,12 @@ pub fn build_game_config(
                     RenderToWindow::from_config_path(display_config_path)?
                         .with_clear([0.0, 0.0, 0.0, 1.0]),
                 )
-                .with_plugin(RenderFlat2D::default()),
+                .with_plugin(RenderFlat2D::default())
+                .with_plugin(RenderUi::default()), // We need UI elements to be rendered: text, scores, etc.
         )?
         .with_bundle(TransformBundle::new())? // bundle for tracking entities positions
         .with_bundle(input_bundle)? // bundle for reading inputs
+        .with_bundle(UiBundle::<StringBindings>::new())? // UiBundle MUST match InputHandler type!
         .with(systems::PaddleSystem, "paddle_system", &["input_system"])
         .with(systems::BallSystem, "ball_system", &[])
         .with(systems::ScoreSystem, "score_system", &["ball_system"])

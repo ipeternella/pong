@@ -1,5 +1,6 @@
 mod entities;
 mod pong;
+mod settings;
 mod sprite_sheet;
 mod startup;
 mod systems;

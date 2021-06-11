@@ -7,11 +7,7 @@ use amethyst::{
     shred::World,
 };
 
-use crate::pong::{ARENA_HEIGHT, ARENA_WIDTH};
-
-pub const BALL_VELOCITY_X: f32 = 75.0;
-pub const BALL_VELOCITY_Y: f32 = 50.0;
-pub const BALL_RADIUS: f32 = 2.0;
+use crate::settings::{ARENA_HEIGHT, ARENA_WIDTH, BALL_RADIUS, BALL_VELOCITY_X, BALL_VELOCITY_Y};
 
 /// Ball entity definition.
 #[derive(Debug)]
