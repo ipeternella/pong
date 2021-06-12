@@ -13,14 +13,12 @@ fn main() -> amethyst::Result<()> {
     let assets_dir = app_root.join("assets");
     let initial_state = state::Pong::default();
 
-    // logger setup
     setup_logger();
 
-    // game config and game instance building
     let game_config = build_game_config(&app_root)?;
     let mut game = Application::new(assets_dir, initial_state, game_config)?;
 
-    // run game loop
+    // main game loop
     game.run();
 
     Ok(())

@@ -1,8 +1,10 @@
 mod ball;
 mod camera;
 mod paddle;
+mod score;
 
 // exposes Ball struct
-pub use self::ball::{initialize_ball, Ball};
-pub use self::camera::initialize_camera;
-pub use self::paddle::{initialize_paddles, Paddle, Side};
+pub use ball::{initialize_ball, Ball};
+pub use camera::initialize_camera;
+pub use paddle::{initialize_paddles, Paddle, Side};
+pub use score::intialize_scoreboard;
