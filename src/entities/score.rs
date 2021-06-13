@@ -1,10 +1,12 @@
 use amethyst::{
-    assets::{AssetStorage, Loader},
+    assets::{AssetStorage, Handle, Loader},
     ecs::Entity,
     prelude::{Builder, WorldExt},
     shred::World,
     ui::{Anchor, FontAsset, LineMode, TtfFormat, UiText, UiTransform},
 };
+
+use crate::settings::SQUARE_FONT_PATH;
 
 /// ScoreBoard holds the score state of the game.
 #[derive(Default)]
@@ -19,39 +21,43 @@ pub struct ScoreText {
     pub p2_score: Entity,
 }
 
+/// Uses an asset loader to fetch font assets and return a font handle to the loaded asset.
+fn load_font_handle(font_location: &str, world: &mut World) -> Handle<FontAsset> {
+    let asset_loader = world.read_resource::<Loader>();
+    let storage = world.read_resource::<AssetStorage<FontAsset>>();
+
+    asset_loader.load(font_location, TtfFormat, (), &storage)
+}
+
 /// Initializes the game Score board with the players scores.
 pub fn intialize_scoreboard(world: &mut World) {
-    let font_handle = {
-        // fetch from world the assets loader
-        let asset_loader = world.read_resource::<Loader>();
-        let storage = world.read_resource::<AssetStorage<FontAsset>>();
+    // font asset handle
+    let font_handle = load_font_handle(SQUARE_FONT_PATH, world);
 
-        // load the font asset and put into the asset storage
-        asset_loader.load("fonts/square.ttf", TtfFormat, (), &storage)
-    };
-
+    // transforms to position the text
     let p1_transform = UiTransform::new(
         "P1".to_string(),
         Anchor::TopMiddle,
         Anchor::TopMiddle,
-        -50.,
-        -50.,
-        1.,
-        200.,
-        50.,
+        -50.0,
+        -50.0,
+        1.0,
+        200.0,
+        50.0,
     );
 
     let p2_transform = UiTransform::new(
         "P2".to_string(),
         Anchor::TopMiddle,
         Anchor::TopMiddle,
-        50.,
-        -50.,
-        1.,
-        200.,
-        50.,
+        50.0,
+        -50.0,
+        1.0,
+        200.0,
+        50.0,
     );
 
+    // score entities creation
     let p1_score = world
         .create_entity()
         .with(p1_transform)

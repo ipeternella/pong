@@ -12,3 +12,6 @@ pub const BALL_RADIUS: f32 = 2.0;
 // Paddle definitions
 pub const PADDLE_WIDTH: f32 = 4.0;
 pub const PADDLE_HEIGHT: f32 = 16.0;
+
+// Assets paths
+pub const SQUARE_FONT_PATH: &str = "fonts/square.ttf";

@@ -9,29 +9,23 @@ use amethyst::{
 /// at the appropriate positions in order to generate a handle to a well-formatted SpriteSheet
 /// struct which contains the sprites at the right sizes/positions.
 pub fn load_sprite_sheet(world: &mut World) -> Handle<SpriteSheet> {
-    // the handle points to the location where the asset was loaded: faster and reduces mem usage!
-    let texture_handle = {
-        // loader is not ECS: it's a resource that belongs to the ECS World
-        let loader = world.read_resource::<Loader>(); // added by the core application
+    let asset_loader = world.read_resource::<Loader>();
+    let texture_storage = world.read_resource::<AssetStorage<Texture>>();
+    let sprite_sheet_storage = world.read_resource::<AssetStorage<SpriteSheet>>();
 
-        // texture storage is not ECS: it's a resource where the loader puts Textures loaded from spritesheet, etc.
-        let texture_storage = world.read_resource::<AssetStorage<Texture>>();
-
-        loader.load(
-            "textures/spritesheet.png",
-            ImageFormat::default(),
-            (),
-            &texture_storage,
-        )
-    };
-
-    let loader = world.read_resource::<Loader>();
-    let sprite_sheet_store = world.read_resource::<AssetStorage<SpriteSheet>>();
-
-    loader.load(
-        "textures/spritesheet.ron",        // ron file: sprites' positions
-        SpriteSheetFormat(texture_handle), // handle to the loaded spritesheet png file
+    // handle for the textures/sprites
+    let texture_handle = asset_loader.load(
+        "textures/spritesheet.png",
+        ImageFormat::default(),
         (),
-        &sprite_sheet_store, // storage used to store spritesheet data (extract pics from the png file)
+        &texture_storage,
+    );
+
+    // final handle for the textures given the sprites of the ron sprite positions
+    asset_loader.load(
+        "textures/spritesheet.ron",
+        SpriteSheetFormat(texture_handle), // uses ron file to load sprites from spritesheet
+        (),
+        &sprite_sheet_storage,
     )
 }
