@@ -46,12 +46,8 @@ impl<'s> System<'s> for ScoreSystem {
             let ball_x = transform.translation().x;
             let ball_radius = ball.radius;
 
-            // centralize the ball and reverse its speed!
             if let Some(side_score) = self.has_player_scored(ball_x, ball_radius) {
-                let spawn_x = ARENA_WIDTH / 2.0;
-                let spawn_y = ARENA_HEIGHT / 2.0;
-
-                // score handling
+                // score UI update
                 if side_score == Side::Left {
                     if let Some(text) = ui_text_storage.get_mut(score_text.p2_score) {
                         let score: i32 = text.text.parse().unwrap();
@@ -65,6 +61,10 @@ impl<'s> System<'s> for ScoreSystem {
                         text.text = (score + 1).to_string();
                     }
                 }
+
+                // after score UI update
+                let spawn_x = ARENA_WIDTH / 2.0;
+                let spawn_y = ARENA_HEIGHT / 2.0;
 
                 transform.set_translation_xyz(spawn_x, spawn_y, 0.0);
                 ball.velocity[0] *= -1.0;
