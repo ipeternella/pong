@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 use amethyst::{
+    audio::AudioBundle,
     core::TransformBundle,
     input::{InputBundle, StringBindings},
     renderer::{types::DefaultBackend, RenderFlat2D, RenderToWindow, RenderingBundle},
@@ -40,6 +41,7 @@ pub fn build_game_config(
         .with_bundle(TransformBundle::new())? // bundle for tracking entities positions
         .with_bundle(input_bundle)? // bundle for reading inputs
         .with_bundle(UiBundle::<StringBindings>::new())? // UiBundle MUST match InputHandler type!
+        .with_bundle(AudioBundle::default())? // audio and sfx ECS components
         .with(systems::PaddleSystem, "paddle_system", &["input_system"])
         .with(systems::BallSystem, "ball_system", &[])
         .with(systems::ScoreSystem, "score_system", &["ball_system"])

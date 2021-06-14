@@ -1,3 +1,4 @@
+mod audio;
 mod entities;
 mod settings;
 mod sprite_sheet;

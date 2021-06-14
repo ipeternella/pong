@@ -1,6 +1,7 @@
 use amethyst::{assets::Handle, core::Time, prelude::*, renderer::SpriteSheet, SimpleState};
 
 use crate::{
+    audio::initialize_audio,
     entities::{
         initialize_ball, initialize_camera, initialize_paddles, intialize_scoreboard, Ball, Paddle,
     },
@@ -29,6 +30,7 @@ impl SimpleState for Pong {
         initialize_camera(world);
         initialize_paddles(world, self.sprite_sheet_handle.clone().unwrap());
         intialize_scoreboard(world);
+        initialize_audio(world);
     }
 
     fn update(&mut self, _data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
