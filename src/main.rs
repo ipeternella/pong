@@ -18,7 +18,6 @@ fn main() -> amethyst::Result<()> {
     let game_config = build_game_config(&app_root)?;
     let mut game = Application::new(assets_dir, initial_state, game_config)?;
 
-    // main game loop
     game.run();
 
     Ok(())

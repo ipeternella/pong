@@ -2,11 +2,12 @@ use amethyst::{
     core::Transform,
     derive::SystemDesc,
     ecs::{Join, SystemData, WriteStorage},
-    shred::System,
+    shred::{ReadExpect, System},
+    ui::UiText,
 };
 
 use crate::{
-    entities::Ball,
+    entities::{Ball, ScoreText, Side},
     settings::{ARENA_HEIGHT, ARENA_WIDTH},
 };
 
@@ -14,17 +15,31 @@ use crate::{
 pub struct ScoreSystem;
 
 impl ScoreSystem {
-    fn has_player_scored(&mut self, ball_x: f32, ball_radius: f32) -> bool {
-        (ball_x <= ball_radius) || (ball_x >= ARENA_WIDTH - ball_radius)
+    // Returns an Option with the paddle side that got defeated. If neither player has
+    // scored, than the Option contains None.
+    fn has_player_scored(&mut self, ball_x: f32, ball_radius: f32) -> Option<Side> {
+        if ball_x <= ball_radius {
+            Some(Side::Left)
+        } else if ball_x >= ARENA_WIDTH - ball_radius {
+            Some(Side::Right)
+        } else {
+            None
+        }
     }
 }
 
 /// System responsible for dealing with ball scoring.
 impl<'s> System<'s> for ScoreSystem {
-    type SystemData = (WriteStorage<'s, Ball>, WriteStorage<'s, Transform>);
+    // data changed by the system
+    type SystemData = (
+        WriteStorage<'s, Ball>,
+        WriteStorage<'s, Transform>,
+        WriteStorage<'s, UiText>,
+        ReadExpect<'s, ScoreText>,
+    );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut ball_storage, mut transform_storage) = data;
+        let (mut ball_storage, mut transform_storage, mut ui_text_storage, score_text) = data;
 
         // join storages: only ball with transforms
         for (ball, transform) in (&mut ball_storage, &mut transform_storage).join() {
@@ -32,9 +47,24 @@ impl<'s> System<'s> for ScoreSystem {
             let ball_radius = ball.radius;
 
             // centralize the ball and reverse its speed!
-            if self.has_player_scored(ball_x, ball_radius) {
+            if let Some(side_score) = self.has_player_scored(ball_x, ball_radius) {
                 let spawn_x = ARENA_WIDTH / 2.0;
                 let spawn_y = ARENA_HEIGHT / 2.0;
+
+                // score handling
+                if side_score == Side::Left {
+                    if let Some(text) = ui_text_storage.get_mut(score_text.p2_score) {
+                        let score: i32 = text.text.parse().unwrap();
+
+                        text.text = (score + 1).to_string();
+                    }
+                } else {
+                    if let Some(text) = ui_text_storage.get_mut(score_text.p1_score) {
+                        let score: i32 = text.text.parse().unwrap();
+
+                        text.text = (score + 1).to_string();
+                    }
+                }
 
                 transform.set_translation_xyz(spawn_x, spawn_y, 0.0);
                 ball.velocity[0] *= -1.0;
@@ -55,10 +85,10 @@ mod tests {
         let mut score_system = ScoreSystem {};
 
         // act
-        let has_score = score_system.has_player_scored(ball_x, ball_radius);
+        let has_scored_opt = score_system.has_player_scored(ball_x, ball_radius);
 
         // assert
-        assert_eq!(has_score, true);
+        assert_eq!(has_scored_opt.is_none(), false); // player has scored
     }
 
     #[test]
@@ -69,10 +99,11 @@ mod tests {
         let mut score_system = ScoreSystem {};
 
         // act
-        let has_score = score_system.has_player_scored(ball_x, ball_radius);
+        let has_scored_opt = score_system.has_player_scored(ball_x, ball_radius);
 
         // assert
-        assert_eq!(has_score, true);
+        assert_eq!(has_scored_opt.is_none(), false); // player has scored
+        assert_eq!(has_scored_opt.unwrap(), Side::Left);
     }
 
     #[test]
@@ -83,10 +114,11 @@ mod tests {
         let mut score_system = ScoreSystem {};
 
         // act
-        let has_score = score_system.has_player_scored(ball_x, ball_radius);
+        let has_scored_opt = score_system.has_player_scored(ball_x, ball_radius);
 
         // assert
-        assert_eq!(has_score, true);
+        assert_eq!(has_scored_opt.is_none(), false); // player has scored
+        assert_eq!(has_scored_opt.unwrap(), Side::Right);
     }
 
     #[test]
@@ -97,9 +129,9 @@ mod tests {
         let mut score_system = ScoreSystem {};
 
         // act
-        let has_score = score_system.has_player_scored(ball_x, ball_radius);
+        let has_scored_opt = score_system.has_player_scored(ball_x, ball_radius);
 
         // assert
-        assert_eq!(has_score, false);
+        assert_eq!(has_scored_opt.is_none(), true);
     }
 }

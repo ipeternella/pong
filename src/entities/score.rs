@@ -8,13 +8,6 @@ use amethyst::{
 
 use crate::settings::SQUARE_FONT_PATH;
 
-/// ScoreBoard holds the score state of the game.
-#[derive(Default)]
-pub struct ScoreBoard {
-    pub score_left: f32,
-    pub score_right: f32,
-}
-
 /// ScoreText holds the UI text that is print on the game screen.
 pub struct ScoreText {
     pub p1_score: Entity,
@@ -84,5 +77,7 @@ pub fn intialize_scoreboard(world: &mut World) {
         ))
         .build();
 
+    // inserts ScoreText as a resource into the world to be fetched later
+    // ScoreText will hold references to the scores entities (transforms, etc.)
     world.insert(ScoreText { p1_score, p2_score });
 }

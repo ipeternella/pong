@@ -5,6 +5,8 @@ use amethyst::{
     shred::World,
 };
 
+use crate::settings::{SPRITE_SHEET_ATLAS_PATH, SPRITE_SHEET_PATH};
+
 /// Reads a spritesheet png file and its related ron file in order to parse the spritesheet
 /// at the appropriate positions in order to generate a handle to a well-formatted SpriteSheet
 /// struct which contains the sprites at the right sizes/positions.
@@ -15,7 +17,7 @@ pub fn load_sprite_sheet(world: &mut World) -> Handle<SpriteSheet> {
 
     // handle for the textures/sprites
     let texture_handle = asset_loader.load(
-        "textures/spritesheet.png",
+        SPRITE_SHEET_PATH,
         ImageFormat::default(),
         (),
         &texture_storage,
@@ -23,7 +25,7 @@ pub fn load_sprite_sheet(world: &mut World) -> Handle<SpriteSheet> {
 
     // final handle for the textures given the sprites of the ron sprite positions
     asset_loader.load(
-        "textures/spritesheet.ron",
+        SPRITE_SHEET_ATLAS_PATH,
         SpriteSheetFormat(texture_handle), // uses ron file to load sprites from spritesheet
         (),
         &sprite_sheet_storage,

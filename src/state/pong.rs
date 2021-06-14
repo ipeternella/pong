@@ -4,6 +4,7 @@ use crate::{
     entities::{
         initialize_ball, initialize_camera, initialize_paddles, intialize_scoreboard, Ball, Paddle,
     },
+    settings::BALL_SPAWN_DELAY,
     sprite_sheet::load_sprite_sheet,
 };
 
@@ -19,7 +20,7 @@ impl SimpleState for Pong {
         let world = _data.world;
 
         self.sprite_sheet_handle.replace(load_sprite_sheet(world)); // adds sprite sheet handle state
-        self.ball_spawn_timer.replace(1.0); // adds ball time spawner
+        self.ball_spawn_timer.replace(BALL_SPAWN_DELAY); // adds ball time spawner
 
         world.register::<Paddle>(); // in order to use Paddle Component on an entity
         world.register::<Ball>(); // in order to use the Ball Component on an entity
@@ -39,7 +40,7 @@ impl SimpleState for Pong {
                 ball_timer -= time.delta_seconds(); // seconds passed after last frame (spf)
             }
 
-            if ball_timer < 0.0 {
+            if ball_timer <= 0.0 {
                 let sprite_sheet_handle = self.sprite_sheet_handle.clone().unwrap(); // clone and unwraps Option handle
 
                 initialize_ball(_data.world, sprite_sheet_handle); // handler is consumed per entitty
