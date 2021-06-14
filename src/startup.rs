@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use amethyst::{
-    audio::AudioBundle,
+    audio::{AudioBundle, DjSystemDesc},
     core::TransformBundle,
     input::{InputBundle, StringBindings},
     renderer::{types::DefaultBackend, RenderFlat2D, RenderToWindow, RenderingBundle},
@@ -10,7 +10,7 @@ use amethyst::{
     GameDataBuilder,
 };
 
-use crate::systems;
+use crate::{audio::Music, systems};
 
 /// Builds the game configuration by pluging bundles and systems to it.
 pub fn build_game_config(
@@ -49,7 +49,12 @@ pub fn build_game_config(
             systems::CollisionSystem,
             "collision_system",
             &["paddle_system", "ball_system"],
-        );
+        )
+        .with_system_desc(
+            DjSystemDesc::new(|music: &mut Music| music.tracks.next()),
+            "dj_system",
+            &[],
+        ); // music tracks system (DJ)
 
     Ok(game_config)
 }

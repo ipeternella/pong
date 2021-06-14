@@ -3,9 +3,12 @@
 // Gameplay
 pub const BALL_SPAWN_DELAY: f32 = 2.0;
 
-// Audio
-pub const BOUNCE_SFX: &str = "audio/bounce.ogg";
-pub const SCORE_SFX: &str = "audio/score.ogg";
+// Audio - sfx
+pub const BOUNCE_SFX: &str = "audio/sfx/bounce.ogg";
+pub const SCORE_SFX: &str = "audio/sfx/score.ogg";
+
+// Audio - tracks
+pub const MUSIC_TRACKS: &[&str] = &["audio/tracks/track-01.ogg", "audio/tracks/track-02.ogg"];
 
 // Arena (game window) settings
 pub const ARENA_WIDTH: f32 = 100.0;
