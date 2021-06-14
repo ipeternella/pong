@@ -1,10 +1,13 @@
 use amethyst::{
+    assets::AssetStorage,
+    audio::{output::Output, Source},
     core::Transform,
     ecs::{Join, ReadStorage, WriteStorage},
-    shred::System,
+    shred::{Read, ReadExpect, System},
 };
 
 use crate::{
+    audio::{play_bounce_sfx, Sounds},
     entities::{Ball, Paddle, Side},
     settings::ARENA_HEIGHT,
 };
@@ -16,10 +19,20 @@ impl<'s> System<'s> for CollisionSystem {
         ReadStorage<'s, Transform>,
         ReadStorage<'s, Paddle>,
         WriteStorage<'s, Ball>, // mutable: gonna update it's velocity vector
+        Read<'s, AssetStorage<Source>>,
+        ReadExpect<'s, Sounds>,
+        Option<Read<'s, Output>>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (transform_storage, paddle_storage, mut ball_storage) = data;
+        let (
+            transform_storage,
+            paddle_storage,
+            mut ball_storage,
+            audio_storage,
+            sounds,
+            audio_output,
+        ) = data;
 
         // ball and its transforms
         for (ball, transform) in (&mut ball_storage, &transform_storage).join() {
@@ -47,6 +60,7 @@ impl<'s> System<'s> for CollisionSystem {
                     if (paddle.side == Side::Left && ball.velocity[0] < 0.0)
                         || (paddle.side == Side::Right && ball.velocity[0] > 0.0)
                     {
+                        play_bounce_sfx(&sounds, &audio_storage, audio_output.as_deref());
                         ball.velocity[0] *= -1.0;
                     }
                 }

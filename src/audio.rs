@@ -1,6 +1,6 @@
 use amethyst::{
-    assets::Loader,
-    audio::{OggFormat, SourceHandle},
+    assets::{AssetStorage, Loader},
+    audio::{output::Output, OggFormat, Source, SourceHandle},
     prelude::WorldExt,
     shred::World,
 };
@@ -19,6 +19,7 @@ fn load_audio_file(sound_file_path: &str, asset_loader: &Loader, world: &World) 
     asset_loader.load(sound_file_path, OggFormat, (), &storage)
 }
 
+// Adds the Sounds resource ot the World entity to be fetched later.
 pub fn initialize_audio(world: &mut World) {
     let sounds = {
         // immutable borrow ends in this block scope
@@ -32,4 +33,17 @@ pub fn initialize_audio(world: &mut World) {
     };
 
     world.insert(sounds);
+}
+
+// Plays the bounce sfx.
+pub fn play_bounce_sfx(
+    sounds: &Sounds,
+    asset_storage: &AssetStorage<Source>,
+    output: Option<&Output>,
+) {
+    if let Some(ref output) = output.as_ref() {
+        if let Some(sfx) = asset_storage.get(&sounds.bounce_sfx) {
+            output.play_once(sfx, 1.0);
+        }
+    }
 }
